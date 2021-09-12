@@ -96,7 +96,7 @@ def enrichment_pvalue(
     k = len(intersect(que_set, ref_set))
     M, n, N = len(universe), len(ref_set), len(que_set)
     pval = hypergeom_pvalue(k, N, n, M)
-    print(f"{pval:.3f}")
+    # print(f"{pval:.3f}")
     return pval
 
 
@@ -145,10 +145,28 @@ def multi_sets_pvalues(
 
 
 def __test__():
-    pass
+    datadir = Path(__file__).parent / 'test_data'
+    universe = load_namelist(datadir / 'universeSet.txt')
+    ref_set = load_namelist(datadir / 'refSet.txt')
+    que_set = load_namelist(datadir / 'querySet.txt')
+
+    # test 1
+    res = enrichment_pvalue(ref_set, que_set, universe)
+    logging.info(res)
+
+    # test 2
+    res = multi_sets_pvalues(
+        [ref_set] * 2, [que_set] * 2, universe, n_rep_random=1000)
+    logging.info(res)
+
 
 if __name__ == "__main__":
-    # datadir = Path("/Users/xingyan/Downloads/temp/pvalue_calc/")
+    import logging
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s %(filename)s-%(lineno)d-%(funcName)s(): '
+               '%(levelname)s\n %(message)s')
+
     __test__()
 
 
