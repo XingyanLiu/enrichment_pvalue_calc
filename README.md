@@ -1,4 +1,4 @@
-# Compute the enrichment p-value based on hypergeometric distribution models
+# Computation of the enrichment p-value based on hypergeometric distribution models
 
 The hypergeometric distribution models drawing objects from a bin.
 M is the total number of objects, n is total number of Type I objects.
@@ -34,3 +34,7 @@ res = multi_sets_pvalues(
     [ref_set] * 2, [que_set] * 2, universe, n_rep_random=1000)
 print(res)
 ```
+
+**NOTE**
+
+For multiple testing, those p-values should be adjusted.

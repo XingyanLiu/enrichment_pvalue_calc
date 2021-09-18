@@ -86,7 +86,7 @@ def enrichment_pvalue(
 
     for a list or dict of que-sets:
     >>> pvals = [enrichment_pvalue(ref_set, s) for s in que_sets]
-    >>> pvals = {k, enrichment_pvalue(ref_set, s) for k, s in que_sets.items()}
+    >>> pvals = {k: enrichment_pvalue(ref_set, s) for k, s in que_sets.items()}
 
     """
     universe = set(universe)

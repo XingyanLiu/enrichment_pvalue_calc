@@ -12,7 +12,7 @@ import logging
 import pandas as pd
 import numpy as np
 sys.path.append('.')
-from hyperg_test_pvalue import load_namelist, multi_sets_pvalues
+from hyperg_test_pvalue import load_namelist, multi_sets_pvalues, enrichment_pvalue
 
 
 def _top_n_markers(df: pd.DataFrame, ntop: int = 10):
@@ -29,6 +29,14 @@ def _load_cluster_deg_dict() -> dict:
     fn = datadir / 'DEGs-dog/deg_intersects-p0.001.tsv'
     degs_each_cl = pd.read_csv(fn, sep='\t', index_col=0).iloc[:, 0]
     return degs_each_cl.map(lambda x: x.split(',')).to_dict()
+
+
+def __load_pooled_cluster_deg() -> set:
+    deg = set()
+    deg_dict = _load_cluster_deg_dict()
+    for cl, s in deg_dict.items():
+        deg.update(s)
+    return deg
 
 
 def _load_psg_dict() -> dict:
@@ -82,6 +90,25 @@ def main_each_cluster():
     resdf.to_csv(resdir / f'pvalues-perCluster-IntersectDEGs.csv', index_label="cluster")
 
 
+def main_pooled_degs():
+    datadir = Path(__file__).parent
+    resdir = datadir / 'pvalues'
+    if not os.path.exists(resdir):
+        os.mkdir(resdir)
+    # universe genes
+    genes_all = _load_gene_universe()
+    # PSGs
+    psg_dict = _load_psg_dict()
+    # DEGs
+    degs_each_cl = __load_pooled_cluster_deg()
+    resdf = multi_sets_pvalues(
+        psg_dict, {'pooled DEGs': degs_each_cl},
+        genes_all)
+
+    print(resdf)
+    resdf.to_csv(resdir / f'pvalues-all-IntersectDEGs.csv', )
+
+
 if __name__ == "__main__":
     # datadir = Path("/Users/xingyan/Downloads/temp/pvalue_calc/")
     logging.basicConfig(
@@ -89,4 +116,5 @@ if __name__ == "__main__":
         format='%(asctime)s %(filename)s-%(lineno)d-%(funcName)s(): '
                '%(levelname)s\n %(message)s')
     # main_0()
-    main_each_cluster()
+    # main_each_cluster()
+    main_pooled_degs()
