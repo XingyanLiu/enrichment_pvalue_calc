@@ -22,7 +22,8 @@ from scipy.stats import hypergeom
 
 def load_namelist(filename):
     with open(filename) as f:
-        return list(map(lambda x: x.strip().strip('"'), f.readlines()))
+        lines = filter(lambda x: len(x.strip()) >= 1, f.readlines())
+        return list(map(lambda x: x.strip().strip('"'), lines))
 
 
 def intersect(set1, set2):

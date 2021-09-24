@@ -27,7 +27,7 @@ def _load_gene_universe() -> set:
 def _load_cluster_deg_dict() -> dict:
     datadir = Path(__file__).parent
     fn = datadir / 'DEGs-dog/deg_intersects-p0.001.tsv'
-    degs_each_cl = pd.read_csv(fn, sep='\t', index_col=0).iloc[:, 0]
+    degs_each_cl = pd.read_csv(fn, sep='\t', index_col=0, header=None).iloc[:, 0]
     return degs_each_cl.map(lambda x: x.split(',')).to_dict()
 
 
@@ -116,5 +116,5 @@ if __name__ == "__main__":
         format='%(asctime)s %(filename)s-%(lineno)d-%(funcName)s(): '
                '%(levelname)s\n %(message)s')
     # main_0()
-    # main_each_cluster()
+    main_each_cluster()
     main_pooled_degs()
